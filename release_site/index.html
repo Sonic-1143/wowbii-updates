@@ -1,2 +1,55 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WOWBII Quiz Updates</title></head><body><h1>WOWBII Primary Quiz Challenge</h1><p>Official update feed.</p><p>Current release: <strong>1.0.2</strong></p><p><a href="update_feed.json">View update metadata</a> · <a href="releases/WOWBII_1.0.2.zip">Download release package</a></p></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>WOWBII | Official Update Centre</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,Segoe UI,Arial,sans-serif;background:#101827;color:#eef3fb}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
+    main{width:min(720px,100%);background:#192438;border:1px solid #34445d;border-radius:22px;padding:clamp(24px,5vw,44px);box-shadow:0 24px 70px #0005}
+    .eyebrow{color:#8eb8ff;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700}
+    h1{font-size:clamp(30px,6vw,44px);line-height:1.08;margin:12px 0}
+    p{color:#bac8da;line-height:1.65}.version{display:inline-flex;align-items:center;gap:9px;background:#233b36;color:#a8f0ca;padding:10px 14px;border-radius:999px;font-weight:700;margin:12px 0 18px}
+    .dot{width:8px;height:8px;border-radius:50%;background:#4ade80}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+    a.btn{display:inline-block;padding:13px 17px;border-radius:11px;text-decoration:none;font-weight:700;background:#8eb8ff;color:#101827}
+    a.secondary{background:#26364e;color:#eef3fb;border:1px solid #425573}
+    .status{font-size:14px;padding:12px 14px;border-radius:10px;background:#202f44;color:#d2deed}
+    code{overflow-wrap:anywhere;color:#dbeafe}footer{border-top:1px solid #34445d;margin-top:26px;padding-top:18px;font-size:13px;color:#8fa2bb}
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Official software updates</div>
+  <h1>WOWBII Primary Quiz Challenge</h1>
+  <p>Use this page to check the latest release and download the teacher-approved update package.</p>
+  <div class="version"><span class="dot"></span><span id="version">Latest release: 1.0.2</span></div>
+  <div class="actions">
+    <a class="btn" id="download" href="releases/WOWBII_1.0.2.zip">Download WOWBII 1.0.2</a>
+    <a class="btn secondary" href="update_feed.json">Updater metadata (JSON)</a>
+  </div>
+  <div class="status" id="status" role="status">Update information is published. The updater reads the JSON metadata link; this page is for people.</div>
+  <p><strong>Important:</strong> Do not edit or replace the JSON feed with this webpage. The updater needs the JSON file to check the version, download the package, and verify its SHA-256 checksum.</p>
+  <footer>WOWBII Update Centre · Feed: <code>update_feed.json</code></footer>
+</main>
+<script>
+(async function(){
+  const status=document.getElementById('status');
+  try{
+    const response=await fetch('update_feed.json',{cache:'no-store'});
+    if(!response.ok) throw new Error('HTTP '+response.status);
+    const feed=await response.json();
+    if(!feed.version || !feed.package_url || !feed.sha256) throw new Error('The update feed is missing required fields.');
+    document.getElementById('version').textContent='Latest release: '+feed.version;
+    document.getElementById('download').href=feed.package_url;
+    document.getElementById('download').textContent='Download WOWBII '+feed.version;
+    status.textContent='Feed connected successfully · Version '+feed.version+' · SHA-256 verification is provided for the updater.';
+  }catch(error){
+    status.textContent='The page loaded, but the update feed could not be read: '+error.message+'. Open the JSON metadata link to check it directly.';
+  }
+})();
+</script>
+</body>
+</html>
